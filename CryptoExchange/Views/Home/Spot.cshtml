@@ -1,0 +1,113 @@
+﻿@model CryptoExchange.Models.Transaction
+@using CryptoExchange.Models;
+@using CryptoExchange.API;
+
+
+@{
+    ViewBag.Title = "View";
+    var A = new API();
+    //CryptoMadoffEntities db = new CryptoMadoffEntities();
+    //User loggedIn = db.Users.First(x => x.Username == username);
+}
+
+<h2 class="text-center my-1"> SPOT TRADING </h2>
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4">
+            <h1>BITCOIN</h1>
+            <h2>Your Balance: @HttpContext.Current.Session["BTC"] BTC</h2>
+            <img src="https://www.cryptocompare.com/media/19633/btc.png" alt="Bitcoin" class="center" style="width:100px;height:100px;" />
+            <h1>£ @A.getBTCPrice()  GBP  </h1>
+        </div>
+
+
+        <div class="col-lg-4">
+            <h1>ETH</h1>
+            <h2>Your Balance: @HttpContext.Current.Session["ETH"]</h2>
+            <img src="https://www.cryptocompare.com/media/20646/eth_logo.png" alt="Ethereum" class="center-block" style="width:100px;height:100px;" />
+            <h1>£ @A.getETHPrice()  GBP  </h1>
+        </div>
+
+        <div class="col-lg-4">
+            <h1>GBP</h1>
+            <h2>Your Balance: @HttpContext.Current.Session["GBP"]</h2>
+            <img src="https://cdn-icons-png.flaticon.com/512/33/33917.png" alt="Ethereum" class="center-block" style="width:100px;height:100px;" />
+
+        </div>
+
+    </div>
+
+
+
+
+    @using (Html.BeginForm("Spot", "Home", FormMethod.Post, new { id = "form1" }))
+    {
+        using (Html.BeginForm())
+        {
+            Html.AntiForgeryToken();
+
+            <div class="form-horizontal">
+                <h4>Transaction</h4>
+                <hr />
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Buy, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            @Html.DropDownListFor(Model => Model.Buy,
+                           new SelectList(
+                               new List<object> { 
+                               new {value = true, text = "Buy" },
+                               new {value = false, text = "Sell" }},
+                               "value",
+                               "text"))
+                            @Html.ValidationMessageFor(model => model.Buy, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CurrencyFrom, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.CurrencyFrom, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CurrencyFrom, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CurrencyFromAmount, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.CurrencyFromAmount, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CurrencyFromAmount, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CurrencyTo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CurrencyTo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CurrencyTo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CurrencyToAmount, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CurrencyToAmount, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CurrencyToAmount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="buy" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+    }
